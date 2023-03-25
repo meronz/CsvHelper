@@ -169,6 +169,11 @@ namespace CsvHelper.Configuration
 		bool ExceptionMessagesContainRawData { get; }
 
 		/// <summary>
+		/// Enables Excel compatibility when handling quotes.
+		/// </summary>
+		bool ExcelCompatibility { get; }
+
+		/// <summary>
 		/// Validates the configuration.
 		/// </summary>
 		void Validate();

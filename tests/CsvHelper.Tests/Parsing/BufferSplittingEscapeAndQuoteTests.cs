@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace CsvHelper.Tests.Parsing
 {
-	
+
     public class BufferSplittingEscapeAndQuoteTests
     {
 		[Fact]
@@ -32,6 +32,31 @@ namespace CsvHelper.Tests.Parsing
 				parser.Read();
 				Assert.Equal("a", parser[0]);
 				Assert.Equal("bcdefghijklm\"nopqrstuvwxyz", parser[1]);
+			}
+		}
+
+		[Fact]
+		public void Read_StringWithUnescapedDoubleQuotes_FieldIsCorrectlyParsed()
+		{
+			var s = new StringBuilder();
+			s.Append("a");
+			s.Append(",\"bcd \"efg\" hil\"");
+			s.Append(",\"bcd \"efg hil\"");
+			s.Append(",\"bcd efg\" hil\"");
+			s.Append("\r\n");
+			var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+			{
+				BadDataFound = null,
+				ExcelCompatibility = false,
+			};
+			using (var reader = new StringReader(s.ToString()))
+			using (var parser = new CsvParser(reader, config))
+			{
+				parser.Read();
+				Assert.Equal("a", parser[0]);
+				Assert.Equal("bcd \"efg\" hil", parser[1]);
+				Assert.Equal("bcd \"efg hil", parser[2]);
+				Assert.Equal("bcd efg\" hil", parser[3]);
 			}
 		}
     }

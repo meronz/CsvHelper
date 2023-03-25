@@ -976,6 +976,7 @@ namespace CsvHelper
 			for (var i = newStart + 1; i < newStart + newLength; i++)
 			{
 				var cPrev = c;
+				var cNext = i == newStart + newLength - 1 ? '\0' : buffer[i + 1];
 				c = buffer[i];
 
 				// a,"b",c
@@ -1002,9 +1003,25 @@ namespace CsvHelper
 
 				if (c == escape && !doneProcessing)
 				{
-					inEscape = true;
+					if (configuration.ExcelCompatibility)
+					{
+						inEscape = true;
+						continue;
+					}
+					else
+					{
+						if (cNext == escape)
+						{
+							inEscape = true;
+							continue;
+						}
 
-					continue;
+						// Field parsing done
+						if (cNext == '\0')
+						{
+							continue;
+						}
+					}
 				}
 
 				processFieldBuffer[position] = c;

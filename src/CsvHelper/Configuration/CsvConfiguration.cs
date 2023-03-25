@@ -71,6 +71,9 @@ namespace CsvHelper.Configuration
 		public virtual bool ExceptionMessagesContainRawData { get; set; } = true;
 
 		/// <inheritdoc/>
+		public bool ExcelCompatibility { get; set; } = true;
+
+		/// <inheritdoc/>
 		public virtual GetConstructor GetConstructor { get; set; } = ConfigurationFunctions.GetConstructor;
 
 		/// <inheritdoc/>
